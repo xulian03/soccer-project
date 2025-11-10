@@ -1,0 +1,16 @@
+[
+  {
+    "_id": "1",
+    "_name": "Luis Enrique",
+    "_age": 55,
+    "_password": null,
+    "_team": "1"
+  },
+  {
+    "_id": "2",
+    "_name": "Guardiola",
+    "_age": 50,
+    "_password": null,
+    "_team": "2"
+  }
+]

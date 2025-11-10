@@ -1,0 +1,209 @@
+INICIO
+ |
+ v
+ARCHIVO PRINCIPAL: main.py
+ |
+ |-> Inicialización del sistema
+ |   Archivo: main.py
+ |   Acción: Cargar repositorios, servicios y configuración inicial
+ |   Dependencias: 
+ |     - database/json_repository.py (persistencia)
+ |     - services/auth_service.py (autenticación)
+ |
+ v
+PANTALLA DE LOGIN
+ |
+ |-> Autenticación de usuario
+ |   Archivo: services/auth_service.py
+ |   Clase: AuthService
+ |   Método: login(username, password)
+ |   Entrada: Usuario, Contraseña
+ |   Validación: Verificar datos
+ |   Acción: Retornar objeto User con rol
+ |   Salida: Usuario autenticado + Rol (Jugador/Entrenador/Admin)
+ |
+ v
+ENRUTADOR DE ROLES
+ |
+ |---> SI ROL = JUGADOR -----------------> MENÚ JUGADOR (gui/player_dashboard.py)
+ |                                          |
+ |                                          |->Opción 1: Configuración
+ |                                          |  Archivo: services/player_service.py
+ |                                          |  Clase: PlayerService
+ |                                          |  Método: obtener_jugador(player_id)
+ |                                          |  Acción: Consultar datos del jugador
+ |                                          |  Salida: Mostrar datos personales
+ |                                          |
+ |                                          |->Opción 2: Ver Mis Estadísticas
+ |                                          |  Archivo: services/analytics_service.py
+ |                                          |  Clase: AnalyticsService
+ |                                          |  Método: obtener_estadisticas_jugador(player_id)
+ |                                          |  Acción: Calcular métricas actuales y actualizarlas
+ |                                          |  Salida: Tabla con goles, asistencias, minutos, etc.
+ |                                          |
+ |                                          |->Opción 3: Ver Mi Predicción de Rendimiento
+ |                                          |  Archivo: services/prediction_service.py
+ |                                          |  Clase: PredictionService
+ |                                          |  Método: predecir_rendimiento_jugador(player_id)
+ |                                          |  Entrada: ID del jugador
+ |                                          |  Acción: Usar modelo ML (scikit-learn)
+ |                                          |  Salida: Rendimiento proyectado próxima temporada
+ |                                          |
+ |                                          |->Opción 4: Exportar Mi Reporte
+ |                                          |  Archivo: services/report_service.py
+ |                                          |  Clase: ReportService
+ |                                          |  Método: generar_reporte_jugador(player_id)
+ |                                          |  Entrada: ID del jugador
+ |                                          |  Acción: Crear PDF/CSV con fecha (usa calendar)
+ |                                          |  Salida: Archivo descargado
+ |                                          |
+ |                                          |->Opción 5: Volver/Cerrar Sesión
+ |
+ |
+ |---> SI ROL = ENTRENADOR ---------------> MENÚ ENTRENADOR (gui/coach_dashboard.py)
+ |                                          |
+ |                                          |->Opción 1: Dashboard General
+ |                                          |  Archivo: services/analytics_service.py
+ |                                          |  Clase: AnalyticsService
+ |                                          |  Método: obtener_jugadores_equipo(coach_id)
+ |                                          |  Acción: Estadísticas de todos los jugadores del equipo, click para ver stats detalladas por jugador
+ |                                          |  Salida: Widgets con números clave
+ |                                          |
+ |                                          |->Opción 2: Buscar Jugadores
+ |                                          |  Archivo: services/player_service.py
+ |                                          |  Clase: PlayerService
+ |                                          |  Método: buscar_jugadores(filtros)
+ |                                          |  Entrada: Edad, Posición, Rendimiento mínimo
+ |                                          |  Validación: Rangos válidos
+ |                                          |  Acción: Filtrar en BD
+ |                                          |  Salida: Lista de jugadores coincidentes
+ |                                          |
+ |                                          |->Opción 3: Predicciones de Equipo
+ |                                          |  Archivo: services/prediction_service.py
+ |                                          |  Clase: PredictionService
+ |                                          |  Método: predecir_rendimiento_equipo(coach_id)
+ |                                          |  Acción: Predecir todos los jugadores del entrenador
+ |                                          |  Salida: Tabla con predicciones individuales
+ |                                          |
+ |                                          |->Opción 4: Análisis de Patrones
+ |                                          |  Archivo: services/analytics_service.py
+ |                                          |  Clase: AnalyticsService
+ |                                          |  Método: analizar_correlaciones(variables)
+ |                                          |  Entrada: Variables a correlacionar (ej: minutos vs goles)
+ |                                          |  Acción: Calcular correlaciones con Pandas
+ |                                          |  Dependencia: visualization_service (gráfico scatter)
+ |                                          |  Salida: Heatmap o scatter plot con r²
+ |                                          |
+ |                                          |->Opción 5: Generar Informe Completo
+ |                                          |  Archivo: services/report_service.py
+ |                                          |  Clase: ReportService
+ |                                          |  Método: generar_informe_entrenador(coach_id)
+ |                                          |  Acción: 
+ |                                          |    1. Obtener fecha con calendar.month_name
+ |                                          |    2. Compilar estadísticas + gráficos
+ |                                          |    3. Crear PDF con logo y formato
+ |                                          |  Dependencias:
+ |                                          |    - analytics_service
+ |                                          |    - visualization_service
+ |                                          |  Salida: PDF profesional con timestamp
+ |                                          |
+ |                                          |->Opción 6: Simulador de Rendimiento
+ |                                          |  Archivo: services/simulation_service.py
+ |                                          |  Clase: SimulationService
+ |                                          |  Método: simular_escenario(player_id, cambios)
+ |                                          |  Entrada: ID, dict con cambios (ej: minutos +500)
+ |                                          |  Acción: Recalcular predicción con nuevos valores
+ |                                          |  Dependencia: prediction_service
+ |                                          |  Salida: Comparación Real vs Simulado
+ |                                          |
+ |                                          |->Opción 7: Volver/Cerrar Sesión
+ |
+ |
+ |---> SI ROL = ADMINISTRADOR ------------> MENÚ ADMINISTRADOR (gui/admin_dashboard.py)
+                                            |
+                                            |->Opción 1: Gestión de Usuarios
+                                            |  Archivo: services/auth_service.py + player_service.py
+                                            |  Clases: AuthService, PlayerService
+                                            |  Métodos: crear_usuario(), editar_usuario(), eliminar_usuario()
+                                            |  Entrada: Datos del usuario según tipo (Jugador/Entrenador/Árbitro)
+                                            |  Validación: utils/validators.py
+                                            |  Acción: CRUD completo en BD
+                                            |  Salida: Confirmación de operación
+                                            |
+                                            |->Opción 2: Dashboard del Sistema
+                                            |  Archivo: services/analytics_service.py
+                                            |  Clase: AnalyticsService
+                                            |  Método: obtener_metricas_sistema()
+                                            |  Acción: Contar usuarios, registros, calcular actividad
+                                            |  Salida: Tarjetas con totales + gráfico de crecimiento
+                                            |
+                                            |->Opción 3: Procesamiento Masivo de Datos
+                                            |  Archivo: services/data_processing_service.py
+                                            |  Clase: DataProcessingService
+                                            |  Método: cargar_datos_masivos(ruta_archivo, formato)
+                                            |  Entrada: Archivo CSV/JSON/XLS/TXT
+                                            |  Validación: 
+                                            |    - Verificar formato con Pandas
+                                            |    - Validar columnas requeridas
+                                            |  Acción:
+                                            |    1. Leer archivo (puede ser 1M+ filas)
+                                            |    2. Validar cada registro
+                                            |    3. Insertar en BD por lotes
+                                            |  Dependencia: database/json_repository.py
+                                            |  Salida: Reporte (X insertados, Y rechazados, errores)
+                                            |
+                                            |->Opción 4: Limpieza de Datos
+                                            |  Archivo: utils/data_cleaner.py
+                                            |  Función: limpiar_dataset(criterios)
+                                            |  Entrada: Umbrales para outliers
+                                            |  Acción:
+                                            |    1. Cargar todos los jugadores (Pandas DataFrame)
+                                            |    2. Detectar outliers (IQR, Z-score)
+                                            |    3. Opciones: eliminar, ajustar o marcar
+                                            |  Método estadístico:
+                                            |    - IQR: valores fuera de Q1-1.5*IQR o Q3+1.5*IQR
+                                            |    - Z-score: |z| > 3
+                                            |  Salida: Reporte de limpieza + opción de aplicar cambios
+                                            |
+                                            |->Opción 5: Análisis Global
+                                            |  Archivo: services/analytics_service.py
+                                            |  Clase: AnalyticsService
+                                            |  Método: analizar_tendencias_globales()
+                                            |  Acción:
+                                            |    1. Agrupar por temporada, posición, edad
+                                            |    2. Calcular promedios móviles
+                                            |    3. Identificar tendencias (ej: "goles aumentan cada año")
+                                            |  Dependencia: visualization_service (gráficos de líneas)
+                                            |  Salida: Dashboard con múltiples gráficos
+                                            |
+                                            |->Opción 6: Exportar Dataset Completo
+                                            |  Archivo: services/data_processing_service.py
+                                            |  Clase: DataProcessingService
+                                            |  Método: exportar_dataset_estandar(formato)
+                                            |  Acción:
+                                            |    1. Obtener todos los jugadores
+                                            |    2. Convertir a DataFrame
+                                            |    3. Estandarizar columnas (orden, nombres)
+                                            |    4. Guardar en CSV/JSON
+                                            |  Salida: Archivo con 1M+ registros para análisis externo
+                                            |
+                                            |->Opción 7: Configuración del Sistema
+                                            |  Archivo: services/analytics_service.py
+                                            |  Clase: AnalyticsService
+                                            |  Método: ajustar_pesos_valoracion(pesos)
+                                            |  Entrada: Dict con pesos para cada estadística
+                                            |  Ejemplo: {goles: 0.4, asistencias: 0.25, minutos: 0.15...}
+                                            |  Acción: Guardar configuración (JSON)
+                                            |  Efecto: Cambia cálculo de "valoración_total"
+                                            |
+                                            |->Opción 8: Generar Datos Simulados (TESTING)
+                                            |  Archivo: utils/data_generator.py (NUEVO)
+                                            |  Función: generar_jugadores_simulados(cantidad)
+                                            |  Entrada: Número de registros (ej: 100,000)
+                                            |  Acción:
+                                            |    1. Usar numpy.random para generar datos realistas
+                                            |    2. Respetar distribuciones lógicas
+                                            |       (ej: delanteros más goles que defensas)
+                                            |  Salida: Archivo CSV + inserción en BD
+                                            |
+                                            |->Opción 9: Volver/Cerrar Sesión

@@ -1,0 +1,14 @@
+[
+  {
+    "_id": "1",
+    "_name": "PSG",
+    "coach": "1",
+    "players": []
+  },
+  {
+    "_id": "2",
+    "_name": "Inter Miami",
+    "coach": "2",
+    "players": []
+  }
+]
